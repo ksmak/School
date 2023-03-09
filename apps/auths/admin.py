@@ -1,11 +1,5 @@
 # Python
-from typing import (
-    Optional,
-    Union,
-    List,
-    Tuple,
-    Any
-)
+from typing import Optional
 
 # Django
 from django.contrib import admin
@@ -23,7 +17,7 @@ class CustomUserAdmin(UserAdmin):
         'last_name',
         'first_name',
         'patronymic',
-        'is_active'
+        'is_active',
     )
     list_filter = ('email', )
     search_fields = ('email', )
@@ -35,8 +29,8 @@ class CustomUserAdmin(UserAdmin):
                 'password',
                 'last_name',
                 'first_name',
-                'patronymic'
-            )
+                'patronymic',
+            ),
         }),
         ('Permissions', {
             'classes': ('wide', ),
@@ -44,9 +38,17 @@ class CustomUserAdmin(UserAdmin):
                 'is_active',
                 'is_staff',
                 'is_superuser',
-                'groups'
-            )
-        })
+                'activation_code',
+                'groups',
+            ),
+        }),
+        (None, {
+            'classes': ('wide', ),
+            'fields': (
+                'create_date',
+                'change_date',
+            ),
+        }),
     )
     add_fieldsets = (
         ('Personal data', {
@@ -57,8 +59,8 @@ class CustomUserAdmin(UserAdmin):
                 'password2',
                 'last_name',
                 'first_name',
-                'patronymic'
-            )
+                'patronymic',
+            ),
         }),
         ('Permissions', {
             'classes': ('wide', ),
@@ -66,11 +68,17 @@ class CustomUserAdmin(UserAdmin):
                 'is_active',
                 'is_staff',
                 'is_superuser',
-            )
+                'groups',
+            ),
         })
     )
     ordering = ('email', )
-    readonly_fields = ('is_superuser', )
+    readonly_fields = (
+        'is_superuser',
+        'create_date',
+        'change_date',
+        'activation_code'
+    )
 
     def get_readonly_fields(
         self,
@@ -79,7 +87,7 @@ class CustomUserAdmin(UserAdmin):
     ) -> tuple:
         if not obj:
             return self.readonly_fields
-        
+
         return self.readonly_fields + ('email', )
 
 

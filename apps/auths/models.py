@@ -9,6 +9,7 @@ from django.contrib.auth.models import (
 # Project
 from abstracts.utils import get_activation_code
 
+
 class CustomUserManager(BaseUserManager):
     """Custom user manager."""
     def create_user(
@@ -16,8 +17,9 @@ class CustomUserManager(BaseUserManager):
         email: str,
         password: str,
         first_name: str,
-        last_name: str
-    ):
+        last_name: str,
+        patronymic: str
+    ) -> 'CustomUser':
         if not email:
             raise ValueError("Email is null.")
 
@@ -31,7 +33,10 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Last name is null.")
 
         user = self.model(
-            email=email
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            patronymic=patronymic
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -44,7 +49,7 @@ class CustomUserManager(BaseUserManager):
         first_name: str,
         last_name: str
 
-    ):
+    ) -> 'CustomUser':
         user = self.create_user(
             email=email,
             password=password,
@@ -100,6 +105,10 @@ class CustomUser(PermissionsMixin, AbstractBaseUser):
         verbose_name='created date',
         auto_now_add=True
     )
+    change_date = models.DateTimeField(
+        verbose_name="changed date",
+        auto_now=True
+    )
 
     objects = CustomUserManager()
 
@@ -111,9 +120,10 @@ class CustomUser(PermissionsMixin, AbstractBaseUser):
         verbose_name_plural = 'users'
         ordering = ('create_date', )
 
-    def __str__(self):
-        return self.email
-    
-    def save(self, *args, **kwargs):
-        self.activation_code = get_activation_code(self.ACTIVATION_CODE_SIZE)
+    def __str__(self) -> str:
+        return f"{self.last_name} {self.first_name}"
+
+    def save(self, *args, **kwargs) -> None:
+        self.activation_code = \
+            get_activation_code(self.ACTIVATION_CODE_SIZE)
         super().save(*args, **kwargs)
