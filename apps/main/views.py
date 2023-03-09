@@ -1,14 +1,9 @@
 # DRF
 from rest_framework import viewsets
 from rest_framework.permissions import (
-    AllowAny,
     IsAuthenticated,
     IsAdminUser
 )
-
-from rest_framework.views import APIView
-from rest_framework.request import Request
-from rest_framework.response import Response
 
 # Project
 from .models import (
@@ -20,7 +15,6 @@ from .models import (
     Mark,
 )
 from .serializers import (
-    RegisterSerializer,
     TeacherSerializer,
     StudentSerializer,
     GroupSerializer,
@@ -29,33 +23,6 @@ from .serializers import (
     MarkSerializer,
 )
 from .permissions import MainPermission
-
-
-class RegisterView(APIView):
-    """Register student view."""
-    permission_classes = [AllowAny]
-
-    def post(
-        self,
-        request: Request,
-        *args,
-        **kwargs,
-    ) -> Response:
-        print(request.data)
-        serializer = RegisterSerializer(
-            data=request.data
-        )
-
-        if not serializer.is_valid():
-            return Response({
-                'error': serializer.errors
-            }, status=400)
-
-        serializer.save()
-
-        return Response({
-            'result': 'OK',
-        }, status=200)
 
 
 class TeacherView(viewsets.ModelViewSet):

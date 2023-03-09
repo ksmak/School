@@ -123,8 +123,8 @@ class Lecture(models.Model):
         verbose_name_plural = 'lectures'
         ordering = ('name', )
 
-        def __str__(self) -> str:
-            return self.name
+    def __str__(self) -> str:
+        return self.name
 
 
 class Mark(models.Model):
@@ -159,4 +159,5 @@ class Mark(models.Model):
         ordering = ('create_date', )
 
     def __str__(self) -> str:
-        return f"teacher:{self.teacher} student:{self.student} lecture:{self.lecture} bal:{self.bal}"
+        return (f"teacher:{self.teacher} student:{self.student}"
+                f"lecture:{self.lecture} bal:{self.bal}")

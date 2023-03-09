@@ -15,7 +15,6 @@ from rest_framework_simplejwt.views import (
 
 # Project
 from main.views import (
-    RegisterView,
     TeacherView,
     StudentView,
     GroupView,
@@ -25,7 +24,7 @@ from main.views import (
 )
 
 router = SimpleRouter(
-    trailing_slash = True
+    trailing_slash=True
 )
 router.register(r'teachers', TeacherView)
 router.register(r'students', StudentView)
@@ -37,10 +36,17 @@ router.register(r'marks', MarkView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('register/', RegisterView.as_view()),
     path('api/', include(router.urls)),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path(
+        'api/token/',
+        TokenObtainPairView.as_view(),
+        name='token_obtain_pair'
+    ),
+    path(
+        'api/token/refresh/',
+        TokenRefreshView.as_view(),
+        name='token_refresh'
+    ),
 ]
 
 

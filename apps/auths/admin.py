@@ -36,9 +36,7 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('wide', ),
             'fields': (
                 'is_active',
-                'is_staff',
                 'is_superuser',
-                'activation_code',
                 'groups',
             ),
         }),
@@ -66,7 +64,6 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('wide', ),
             'fields': (
                 'is_active',
-                'is_staff',
                 'is_superuser',
                 'groups',
             ),
@@ -77,7 +74,6 @@ class CustomUserAdmin(UserAdmin):
         'is_superuser',
         'create_date',
         'change_date',
-        'activation_code'
     )
 
     def get_readonly_fields(

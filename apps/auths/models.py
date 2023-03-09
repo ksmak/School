@@ -6,9 +6,6 @@ from django.contrib.auth.models import (
     PermissionsMixin
 )
 
-# Project
-from abstracts.utils import get_activation_code
-
 
 class CustomUserManager(BaseUserManager):
     """Custom user manager."""
@@ -57,7 +54,6 @@ class CustomUserManager(BaseUserManager):
             last_name=last_name
         )
         user.is_active = True
-        user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
         return user
@@ -65,7 +61,6 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(PermissionsMixin, AbstractBaseUser):
     """Custom user model."""
-    ACTIVATION_CODE_SIZE = 12
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -87,19 +82,11 @@ class CustomUser(PermissionsMixin, AbstractBaseUser):
     )
     is_active = models.BooleanField(
         verbose_name='is active',
-        default=False
-    )
-    is_staff = models.BooleanField(
-        verbose_name='is staff',
-        default=False
+        default=True
     )
     is_superuser = models.BooleanField(
         verbose_name='is superuser',
         default=False
-    )
-    activation_code = models.CharField(
-        verbose_name='activate code',
-        max_length=ACTIVATION_CODE_SIZE
     )
     create_date = models.DateTimeField(
         verbose_name='created date',
@@ -109,6 +96,10 @@ class CustomUser(PermissionsMixin, AbstractBaseUser):
         verbose_name="changed date",
         auto_now=True
     )
+
+    @property
+    def is_staff(self):
+        return self.is_superuser
 
     objects = CustomUserManager()
 
@@ -122,8 +113,3 @@ class CustomUser(PermissionsMixin, AbstractBaseUser):
 
     def __str__(self) -> str:
         return f"{self.last_name} {self.first_name}"
-
-    def save(self, *args, **kwargs) -> None:
-        self.activation_code = \
-            get_activation_code(self.ACTIVATION_CODE_SIZE)
-        super().save(*args, **kwargs)
